@@ -1,0 +1,507 @@
+package btaw.shared.model.query;
+
+import java.io.Serializable;
+import java.lang.IndexOutOfBoundsException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.ListIterator;
+
+import btaw.client.modules.filter.FilterView;
+import btaw.client.modules.filter.FilterView.Modality;
+import btaw.server.model.db.Database;
+import btaw.shared.model.query.column.Column;
+import btaw.shared.model.query.column.TableColumn;
+import btaw.shared.model.query.filter.AggregateFunction;
+import btaw.shared.model.query.filter.Filter;
+import btaw.shared.model.query.filter.FilterPart;
+import btaw.shared.model.query.filter.ImageQueryFilter;
+import btaw.shared.model.query.filter.NestedFilter;
+import btaw.shared.model.query.filter.NoFilter;
+import btaw.shared.model.query.filter.RegionContrastFilter;
+import btaw.shared.model.query.filter.TableColumnFilter;
+
+/**
+ * Query is a SELECT query which can be executed by the Database. It contains a
+ * number of Column objects which will be included in the ResultSet returned
+ * when it is executed, and a Filter which will determine which tuples are
+ * included in the ResultSet.
+ * 
+ * @author Jon VanAlten
+ * 
+ */
+public class Query implements SQLProducer, Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9219559556273346028L;
+	protected ArrayList<Column> columns;
+	protected ArrayList<Column> groupByColumns;
+	protected ArrayList<Column> aggregateColumns;
+	protected ArrayList<AggregateFunction> aggregateFunctions;
+	protected Filter filter;
+	protected Filter aggregateFilter;
+	protected Column orderColumn;
+	protected Order order = Order.ASC;
+	protected Modality mode = FilterView.Modality.QUERY;
+	protected HashSet<String> tables;
+
+	/**
+	 * Default constructor.
+	 * 
+	 */
+	public Query() {
+		columns = new ArrayList<Column>();
+		filter = NoFilter.getInstance();
+		aggregateFilter = NoFilter.getInstance();
+	}
+
+	public enum Order {
+		ASC, DESC
+	}
+
+	public void setOrder(Order ord) {
+		this.order = ord;
+	}
+
+	public Order getOrder() {
+		return this.order;
+	}
+
+	/**
+	 * Insert a new Column into the Query at the specified position. All Columns
+	 * with index equal or greater are shifted to one higher index. If index is
+	 * out of range, add after the last column currently in the Query. If the
+	 * Column is already in the Query, do nothing.
+	 * 
+	 * @param index
+	 *            Index (starting with zero) for insertion of new Column.
+	 * @param column
+	 *            New Column to insert.
+	 */
+	public void insertColumn(int position, Column column) {
+		if (!columns.contains(column)) {
+			try {
+				columns.add(position, column);
+			} catch (IndexOutOfBoundsException ex) {
+				addColumn(column);
+			}
+		}
+	}
+
+	public void addColumns(List<Column> columns) {
+		this.columns.addAll(columns);
+	}
+
+	/**
+	 * Add a new Column after all other Columns. If the Query already contains
+	 * this Column, do nothing.
+	 * 
+	 * @param column
+	 *            New column to add.
+	 */
+	public void addColumn(Column column) {
+		if (!columns.contains(column)) {
+			columns.add(column);
+		}
+	}
+
+	/**
+	 * Get the number of columns currently in the query.
+	 * 
+	 * @return The number of columns in the query.
+	 */
+	public int columnCount() {
+		return columns.size();
+	}
+
+	/**
+	 * Get the column at the specified position. If the index is out of range,
+	 * return null.
+	 * 
+	 * @param position
+	 *            Position of Column to be returned.
+	 * @return Column at the specified index, or null.
+	 */
+	public Column getColumn(int position) {
+		try {
+			return columns.get(position);
+		} catch (IndexOutOfBoundsException ex) {
+			return null;
+		}
+	}
+
+	public void setOrderBy(Column column) {
+		this.orderColumn = column;
+	}
+
+	public Column getOrderBy() {
+		return this.orderColumn;
+	}
+
+	/**
+	 * Remove the column from the Query. If it is not currently in the Query, do
+	 * nothing.
+	 * 
+	 * @param column
+	 *            The Column to remove.
+	 */
+	public void removeColumn(Column column) {
+		int position = columns.indexOf(column);
+		if (position > -1) {
+			columns.remove(position);
+		}
+	}
+
+	/**
+	 * Replace the current Filter for this Query. If the argument is null, do
+	 * nothing.
+	 * 
+	 * @param filter
+	 *            The new Filter for this Query.
+	 */
+	public void setFilter(NestedFilter filter) {
+		if (filter != null) {
+			this.filter = filter;
+		}
+	}
+
+	public void setFilter(NoFilter filter) {
+		if (filter != null) {
+			this.filter = filter;
+		}
+	}
+
+	public void setAggregateFilter(NestedFilter filter) {
+		if (filter != null) {
+			this.aggregateFilter = filter;
+		}
+	}
+
+	public void setAggregateFilter(NoFilter filter) {
+		if (filter != null) {
+			this.aggregateFilter = filter;
+		}
+	}
+
+	/**
+	 * Get the current Filter for this Query.
+	 * 
+	 * @return The current Filter for this Query.
+	 */
+	public Filter getFilter() {
+		return filter;
+	}
+
+	/**
+	 * Return a string representation of this Query. This string shall be
+	 * executable SQL for PostgreSQL.
+	 * 
+	 */
+	@Override
+	public String toSQLString() {
+		if (mode.equals(FilterView.Modality.QUERY)) {
+			return queryModality();
+		} else if (mode.equals(FilterView.Modality.AGGREGATE)) {
+			return aggregateModality();
+		} else {
+			return new String();
+		}
+	}
+
+	/**
+	 * Handles non-aggregate queries.
+	 * 
+	 * @return SQL query
+	 */
+	private String queryModality() {
+		boolean imageQuery = false;
+		if (columns.isEmpty()) {
+			return new String();
+		}
+		String contrastSelectClause = "";
+		String contrastFromClause = "";
+		String contrastWhereClause = "";
+
+		String imageFromClause = "";
+		String imageWhereClause = "";
+		// Handle image queries and region contrast filters. Note that due to the
+		// nature of queries, we only handle one image and one contrast filter per
+		// NestedFilter.
+		if (filter instanceof NestedFilter
+				&& !((NestedFilter) filter).isEmpty()) {
+			for (FilterPart f : ((NestedFilter) filter).getFilters()) {
+				if (f.getFilter() instanceof ImageQueryFilter) {
+					if (imageFromClause.length() > 0) {
+						imageFromClause += ", ";
+					}
+					imageFromClause += ((ImageQueryFilter) f.getFilter())
+							.getFromClause();
+					if (imageWhereClause.length() > 0) {
+						imageWhereClause += " AND ";
+					}
+					imageWhereClause += ((ImageQueryFilter) f.getFilter())
+							.getWhereClause();
+					imageQuery = true;
+				} else if (f.getFilter() instanceof RegionContrastFilter) {
+					contrastSelectClause = ((RegionContrastFilter) f
+							.getFilter()).getSelectClause();
+					contrastFromClause = ((RegionContrastFilter) f.getFilter())
+							.getFromClause();
+					contrastWhereClause = ((RegionContrastFilter) f.getFilter())
+							.getWhereClause();
+				}
+			}
+		}
+		String sql = "";
+		sql += "SELECT " + getColumnString();
+		sql += contrastSelectClause;
+		String clause = getJoinedTables();
+		sql += " FROM " + clause;
+		System.err.println("** JOIN CLAUSE **" + clause);
+		// Since a single filter counts as a NestedFilter, this should always be
+		// applied unless there are 0 filters.
+		if (!NoFilter.getInstance().equals(filter)
+				&& filter instanceof NestedFilter
+				&& !((NestedFilter) filter).isEmpty()
+				&& filter.toSQLString() != null) {
+			if (clause.length() > 0) {
+				sql += " WHERE ";
+			}
+			sql = sql.concat(filter.toSQLString());
+		}
+		if (imageQuery) {
+			if (clause.length() > 0) {
+				sql += " AND " + imageWhereClause;
+			} else {
+				sql += imageWhereClause
+						+ " AND btaw.person.pid = btaw.btap_study.pid";
+			}
+		}
+		if (contrastWhereClause.length() > 0) {
+			if (clause.length() > 0 || imageQuery) {
+				sql += " AND " + contrastWhereClause;
+			}
+		}
+		if (this.getOrderBy() != null
+				&& (getColumnString().contains(orderColumn.toSQLString()))) {
+			sql += " ORDER BY " + orderColumn.toSQLString() + " "
+					+ this.order.toString();
+		}
+		// For debugging.
+		//sql +=  " LIMIT 500";
+		System.err.println("An sql string was generated: \"" + sql + "\"");
+		return sql;
+	}
+
+	protected String aggregateModality() {
+		if (aggregateFunctions.isEmpty())
+			return "";
+		tables = new HashSet<String>();
+		String sql = getAggregateSelect() + " " + getAggregateFrom();
+
+		String tmp = getAggregateWhere();
+		if (tmp.length() > 0) {
+			sql += " " + tmp;
+		}
+		tmp = getAggregateGroupBy();
+		if (tmp.length() > 0) {
+			sql += " GROUP BY " + getAggregateGroupBy();
+		}
+		// " ORDER BY "+orderColumn.toSQLString()+" "+this.order.toString();
+		System.err.println(sql);
+		return sql;
+	}
+
+	protected String getAggregateSelect() {
+		String select = "SELECT ";
+		for (AggregateFunction af : aggregateFunctions) {
+			select += af.getFunction() + "( " + af.getColumn().toSQLString()
+					+ " ) as " + af.getFunction() + "_"
+					+ af.getColumn().toSQLString().replaceAll("\\.", "_")
+					+ ", ";
+		}
+		for (Column col : aggregateColumns) {
+			select += col.toSQLString() + ", ";
+		}
+		select = select.substring(0, select.length() - 2);
+		return select;
+	}
+
+	protected String getAggregateFrom() {
+		String from = "FROM ";
+		for (Column col : aggregateColumns) {
+			if (tables.contains(((TableColumn) col).getTableName())) {
+				continue;
+			} else {
+				tables.add(((TableColumn) col).getTableName());
+				from += ((TableColumn) col).getTableName() + ", ";
+			}
+		}
+		for (AggregateFunction af : aggregateFunctions) {
+			if (tables.contains(((TableColumn) af.getColumn()).getTableName())) {
+				continue;
+			} else {
+				tables.add(((TableColumn) af.getColumn()).getTableName());
+				from += af.getColumn().getTableName() + ", ";
+			}
+		}
+		if ((aggregateFilter instanceof NestedFilter && !((NestedFilter) aggregateFilter)
+				.isEmpty())) {
+			for (FilterPart fp : ((NestedFilter) aggregateFilter).getFilters()) {
+				if (fp.getFilter() instanceof TableColumnFilter
+						&& !tables
+								.contains(((TableColumnFilter) fp.getFilter())
+										.getColumn().getTableName())) {
+					tables.add(((TableColumnFilter) fp.getFilter()).getColumn()
+							.getTableName());
+					from += ((TableColumnFilter) fp.getFilter()).getColumn()
+							.getTableName() + ", ";
+				}
+			}
+		}
+		from = from.substring(0, from.length() - 2);
+		System.err.println("FROM: " + from);
+		return from;
+	}
+
+	protected String getAggregateWhere() {
+		String where = "WHERE ";
+		String tmp = "";
+		String prev = "";
+
+		for (String s : tables) {
+			System.err.println("TBL: " + s);
+			if (prev.length() == 0) {
+				prev = s;
+			} else {
+				tmp += prev + ".pid = " + s + ".pid AND ";
+			}
+		}
+		if ((aggregateFilter instanceof NestedFilter && !((NestedFilter) aggregateFilter)
+				.isEmpty())) {
+			tmp += aggregateFilter.toSQLString();
+		}
+		if (tables.size() > 1
+				&& (aggregateFilter instanceof NestedFilter && !((NestedFilter) aggregateFilter)
+						.isEmpty())) {
+			tmp += " AND ";
+		}
+		System.err.println("WHERE: " + tmp);
+		where += tmp.substring(0, tmp.length() - 5);
+
+		return where;
+	}
+
+	protected String getAggregateGroupBy() {
+		String groupBy = "";
+		for (Column col : groupByColumns) {
+			groupBy += col.toSQLString() + ", ";
+		}
+		if (groupBy.length() > 0) {
+			return groupBy.substring(0, groupBy.length() - 2);
+		} else {
+			return "";
+		}
+	}
+
+	protected String getColumnString() {
+		String ret = new String();
+		String tmp = "";
+		if (!columns.isEmpty()) {
+			ListIterator<Column> iter = columns.listIterator();
+			tmp = iter.next().toSQLString();
+			if (!tmp.startsWith("SKIPME")) {
+				ret = ret.concat(tmp);
+			}
+			while (iter.hasNext()) {
+				tmp = iter.next().toSQLString();
+				if (!tmp.startsWith("SKIPME")) {
+					ret = ret.concat(", " + tmp);
+				}
+			}
+		}
+		return ret;
+	}
+
+	/**
+	 * Gets the rows of tables left-outer-joined together in the form of "a
+	 * (inner join b on a.pid=b.pid)*"
+	 * 
+	 * @return sql clause containing joined tables
+	 */
+	public String getJoinedTables() {
+		ListIterator<Column> iter = columns.listIterator();
+		String colName;
+		String firstColName = getNextTableName(iter);
+		// begin with first table
+		String ret = firstColName;
+		while ((colName = getNextTableName(iter)) != null) {
+			// skip phony and repeated columns, left-joining all columns on pid
+			if (!colName.startsWith("simquery")
+					&& !colName.startsWith("SKIPME")
+					&& !ret.contains(colName)) {
+				ret += " LEFT OUTER JOIN " + colName + " ON " + 
+					firstColName + ".pid" + " = " +
+					colName + ".pid";
+			}
+		}
+		return ret;
+	}
+
+	protected String getNextTableName(ListIterator<Column> iter) {
+		while (iter.hasNext()) {
+			Column col = iter.next();
+			if (col instanceof TableColumn) {
+				String tableNameString = ((TableColumn) col).getTableName();
+				String nameString = ((TableColumn) col).getUniqueTableName();
+				if (nameString.length() > 0) {
+					tableNameString = tableNameString.concat(" " + nameString);
+				}
+				return tableNameString;
+			}
+		}
+		return null;
+	}
+
+	public List<Column> getColumns() {
+		return this.columns;
+	}
+
+	public void setModality(Modality mode) {
+		this.mode = mode;
+	}
+
+	public ArrayList<Column> getGroupByColumns() {
+		return groupByColumns;
+	}
+
+	public void setGroupByColumns(ArrayList<Column> groupByColumns) {
+		this.groupByColumns = groupByColumns;
+	}
+
+	public ArrayList<AggregateFunction> getAggregateFunctions() {
+		return aggregateFunctions;
+	}
+
+	public void setAggregateFunctions(
+			ArrayList<AggregateFunction> aggregateFunctions) {
+		this.aggregateFunctions = aggregateFunctions;
+	}
+
+	public Filter getAggregateFilter() {
+		return aggregateFilter;
+	}
+
+	public void setAggregateFilter(Filter aggregateFilter) {
+		this.aggregateFilter = aggregateFilter;
+	}
+
+	public ArrayList<Column> getAggregateColumns() {
+		return aggregateColumns;
+	}
+
+	public void setAggregateColumns(ArrayList<Column> aggregateColumns) {
+		this.aggregateColumns = aggregateColumns;
+	}
+}

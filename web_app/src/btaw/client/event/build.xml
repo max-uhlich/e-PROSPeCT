@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<project name="btaw" default="event" basedir=".">
+<property name="package" value="btaw"/>
+<target name="event">
+<echo file="${name}Event.java">
+package ${package}.client.event;
+import ${package}.client.event.${name}Handler;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.GwtEvent.Type;
+public class ${name}Event extends GwtEvent&lt;${name}Handler&gt; {
+
+	public static Type&lt;${name}Handler&gt; TYPE = ${name}Handler.TYPE;
+		
+	public ${name}Event(){
+	}
+		
+	@Override
+	public com.google.gwt.event.shared.GwtEvent.Type&lt;${name}Handler&gt; getAssociatedType() {
+		return TYPE;
+	}
+
+	@Override
+	protected void dispatch(${name}Handler handler) {
+		handler.On${name}Event(this);
+	}
+}
+</echo>
+<echo file="${name}Handler.java">
+package ${package}.client.event;
+
+import ${package}.client.event.${name}Event;
+import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent.Type;
+
+public interface ${name}Handler extends EventHandler{
+	public static Type&lt;${name}Handler&gt; TYPE = new Type&lt;${name}Handler&gt;();
+	void On${name}Event(${name}Event e) ;
+}
+</echo>
+<echo file="Has${name}Handlers.java">
+package ${package}.client.event;
+
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.HasHandlers;
+
+public interface Has${name}Handlers extends HasHandlers{
+	HandlerRegistration add${name}Handler(${name}Handler handle);
+}
+</echo>
+</target>
+</project>

@@ -1,0 +1,117 @@
+options{
+STATIC = false;
+}
+PARSER_BEGIN(Parser)
+package btaw.server.synth;
+import java.io.StringReader;
+
+import btaw.shared.model.query.column.Column;
+import btaw.shared.model.query.column.DateTableColumn;
+import btaw.shared.model.query.column.FloatTableColumn;
+import btaw.shared.model.query.column.IntegerTableColumn;
+import btaw.shared.model.query.column.SynthTableColumn;
+import btaw.shared.util.SynthColumnException;
+
+public class Parser
+{
+	private SynthTableColumn col;
+	public void setColumn(SynthTableColumn col){
+		this.col=col;
+	}
+	public void w(String s){
+		col.write(s);
+	}
+	public void addColumn(String s) throws SynthColumnException{
+		this.col.addColumn(s);
+	}
+}
+PARSER_END(Parser)
+
+SKIP :
+{
+    " "
+|   "\r"
+|   "\t"
+|	"\n"
+}
+TOKEN:
+{
+
+	<PLUS: "+">
+|	<MINUS: "-">
+|	<DIVIDE: "/">
+|	<TIMES: "*">
+|	<LPAREN: "(">
+|	<RPAREN: ")">
+|	< WORD: (["a"-"z","A"-"Z"])+>
+|	< NUMBER: (["0"-"9"])+ ("." (["0"-"9"])+)? >
+}
+
+void parse() throws SynthColumnException:
+{}
+{
+    expression() <EOF>
+}
+void expression() throws SynthColumnException:
+{}
+{
+	term()
+	(
+		(<PLUS>{w("+");} term())
+	|	(<MINUS>{w("-");} term())
+	)*
+}
+
+void term() throws SynthColumnException:
+{}
+{
+	factor()
+	(
+		(<TIMES> {w("*");}factor())
+	|	(<DIVIDE> {w("/");}factor())
+	)*
+}
+
+void factor() throws SynthColumnException:
+{}
+{
+  (
+	(column())
+|	(constant())
+|	(<LPAREN>{w("(");}expression(){w(")");}<RPAREN>)
+)
+}
+void column() throws SynthColumnException:
+{
+String tmp=null;
+String result="";
+}
+{
+	(tmp=word() {result+=tmp+" ";})+
+	{
+	result=result.substring(0,result.length()-1);addColumn(result);
+	}
+}
+void constant():
+{String s="";}
+{
+s=number() {w(s);}
+}
+
+String word():
+{
+    Token word= null;
+}
+{
+(
+    word=<WORD>
+)    
+    { return word.image; }
+}
+String number():
+{
+	Token number= null;
+}
+{
+	number=<NUMBER> {return number.image;}
+}

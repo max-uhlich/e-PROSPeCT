@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to='btaw_gui'>
+  <!-- Inherit the core Web Toolkit stuff.                        -->
+  <inherits name='com.google.gwt.user.User'/>
+  
+  <!-- incubator stuff                                            -->
+  <!-- <inherits name='com.google.gwt.widgetideas.WidgetIdeas' /> -->
+  <!-- <inherits name='com.google.gwt.libideas.LibIdeas' />		  -->
+  <!-- <inherits name='com.google.gwt.gen2.Gen2' />               -->
+  <inherits name='com.google.gwt.visualization.Visualization'/>
+  <!-- <inherits name='com.googlecode.gchart.GChart'/>            -->
+ 
+
+  <!-- Inherit the default GWT style sheet.  You can change       -->
+  <!-- the theme of your GWT application by uncommenting          -->
+  <!-- any one of the following lines.                            -->
+  <!--<inherits name='com.google.gwt.user.theme.standard.Standard'/> -->
+  <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> 
+  <!--<inherits name='com.google.gwt.user.theme.dark.Dark'/>-->  
+	
+  <!-- Other module inherits                                      -->
+  <inherits name='com.allen_sauer.gwt.dnd.gwt-dnd' />
+  <!-- Specify the app entry point class.                         -->
+  <entry-point class='btaw.client.BTAW_GUI'/>
+  <inherits name='com.google.gwt.widgetideas.GWTCanvas'/>
+   
+  <!-- Specify the paths for translatable code                    -->
+  <source path='client'/>
+  <source path='shared'/>
+  
+<add-linker name="xsiframe"/>
+<set-configuration-property name="devModeRedirectEnabled" value="true"/>
+</module>

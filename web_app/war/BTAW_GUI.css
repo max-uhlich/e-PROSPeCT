@@ -1,0 +1,342 @@
+/** Add css rules here for your application. */
+
+BODY
+{
+	height: 100%;
+}
+
+HTML 
+{
+	height: 100%;
+}
+
+/** Example rules used by the template application (remove for your app) */
+h1 {
+  font-size: 2em;
+  font-weight: bold;
+  color: #777777;
+  margin: 40px 0px 70px;
+  text-align: center;
+}
+
+.sendButton {
+  display: block;
+  font-size: 16pt;
+}
+
+/** Most GWT widgets already have a style name defined */
+.gwt-DialogBox {
+  width: 400px;
+}
+
+.dialogVPanel {
+  margin: 5px;
+}
+
+.serverResponseLabelError {
+  color: red;
+}
+
+.cursor-crosshair{
+	cursor:crosshair
+}
+
+.clickable-header-style:link, .clickable-header-style:visited
+{
+    color: gray;
+    text-decoration: none;
+}
+
+.clickable-header-style:hover
+{
+    color: black;
+    
+
+}
+/** Set ids using widget.getElement().setId("idOfElement") */
+#closeButton {
+  margin: 15px 6px 6px;
+}
+
+#category-table
+{
+	width: 100%;
+	vertical-align: text-top;
+}
+
+
+#left-panel
+{
+	padding: 5px 10px 5px 10px;
+}
+
+#searchbox
+{
+	margin: 0px 5px 0 5px;
+	height: 3%;
+}
+
+#btaw-login-button {
+	margin-top: 15px;
+	padding-left: 20px;
+	padding-right: 20px;
+	
+	font-weight: bold;
+	font-size: 1.2em;
+}
+
+#btaw-title
+{
+	font-family:Georgia, "Times New Roman", Times, serif;
+	color: #222;
+	margin-top: 33%;
+	margin-bottom: 35px;
+	font-weight: bold;
+	font-size: 4.2em;	
+}
+
+#btaw-data_warning
+{
+	margin-top: 50px;
+	font-style: italic;
+}
+
+#catView
+{
+   background: #5D86C4;
+   background-image: url('images/image.png');
+   background-repeat: repeat-x;
+}
+
+#buttonBar
+{
+    background: #5D86C4;
+    background-image: url('images/image.png');
+    background-repeat: repeat-x;
+    padding: 3px 3px 3px 0;
+}
+
+
+.textBox_Box2
+{
+	width: 150px;
+}
+
+.textBox_Box
+{
+	width: 150px;
+	margin-top: 1px;
+}
+
+.field-label 
+{
+	font-weight: bold;
+	font-size: 1.2em;
+	margin-right: 10px;
+}
+
+.center-Label
+{
+	position:relative;
+	top:5px;
+	padding: 0px 5px;
+}
+
+.titleLabel
+{
+	position:relative;
+	padding: 0px 5px;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+.operatorPanelClass
+{
+	background: #EAEBF4;
+	width:100%;
+	padding:5px;
+}
+.buttonPanelClass
+{
+	background: #aaaaaa;
+	padding:4px 20px 4px 4px;
+}
+.gwt-SplitLayoutPanel .gwt-SplitLayoutPanel-HDragger 
+{
+    background: #5D86C4;
+    background-image: url('images/image.png');
+    background-repeat: repeat-x;
+}
+.gwt-SplitLayoutPanel .gwt-SplitLayoutPanel-VDragger {
+	 height:2px;
+	 background: #5D86C4;
+}
+.grey-SplitLayoutPanel .gwt-SplitLayoutPanel-HDragger
+{
+    background: #ebebf5;
+    background-repeat: repeat-x;
+}
+.grey-SplitLayoutPanel .gwt-SplitLayoutPanel-VDragger
+{
+    background: #ebebf5;
+    background-repeat: repeat-y;
+}
+.gwt-SuggestBoxPopup{
+	z-index: 40;
+}
+.gwt-TabLayoutPanel 
+{ 
+    height: 300px; 
+} 
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelTabs { 
+	background: #ebebf5;
+} 
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelContent { 
+  border-color: #ebebf5; 
+  border-style: solid; 
+  border-width: 4px 4px 4px; 
+  overflow: hidden; 
+  padding: 6px; 
+  background: #FFFFFF;  
+} 
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelTab { 
+  margin-left: 6px; 
+  padding: 3px 8px 3px 8px; 
+  cursor: pointer; 
+  cursor: hand; 
+  color: black; 
+  font-size: 1em; 
+  color: #5482c0; 
+  text-align: center; 
+  background: #1b62b0; 
+} 
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelTab-selected { 
+  cursor: default; 
+  background: #5482c0; 
+  font-size: 1em; 
+  color: #FFFFFF; 
+}
+
+.upDownButton
+{
+    background: none;
+    width: 20px;
+    height: 20px;
+}
+
+.parenthesis
+{
+    background: none;
+    width: 10px;
+    height: 25px;
+}
+#countLabel{
+	background: #EAEBF4;
+}
+.setBGToGrey {
+	background: #EAEBF4;
+}
+.border-Grey {
+	border:2px solid grey;
+}
+
+.gwt-SliderBar-shell {
+  border-right: 2px solid #848280;
+  border-bottom: 2px solid #848280;
+  background-color: #efebe7;
+  height: 34pt;
+  width: 50%;
+  outline: 0;
+}
+.gwt-SliderBar-shell .gwt-SliderBar-line {
+  border: 1px solid black;
+  background-color: white;
+  height: 4px;
+  width: 95%;
+  top: 22pt;
+  overflow: hidden;
+}
+.gwt-SliderBar-shell .gwt-SliderBar-knob {
+  top: 14pt;
+  width: 11px;
+  height: 21px;
+  z-index: 1;
+  cursor: pointer;
+}
+.gwt-SliderBar-shell .gwt-SliderBar-tick {
+  top: -20pt;
+  width: 1px;
+  height: 40pt;
+  background: black;
+  overflow: hidden;
+}
+.gwt-SliderBar-shell .gwt-SliderBar-label {
+  top: -30pt;
+  font-size: 8pt;
+  cursor: default;
+}
+.gwt-SliderBar-shell-focused {
+}
+.gwt-SliderBar-shell .gwt-SliderBar-line-sliding {
+  background-color: #DDDDDD;
+  cursor: pointer;
+}
+.gwt-StudyDate-shell {
+  border-right: 2px solid #848280;
+  background-color: #efebe7;
+  height: 34pt;
+  width: 50%;
+  outline: 0;
+}
+.gwt-StudyDate-shell .gwt-StudyDate-label {
+  top: 2pt;
+  z-index: 1;
+  font-size: 10pt;
+  cursor: default;
+}
+
+.gwt-PopupPanelGlass {
+  background-color: #000;
+  opacity: 0.3;
+  filter: alpha(opacity=30);
+  z-index: 255;
+}
+
+
+.gwt-PopupPanel {
+  border: 3px solid #e3e3e3;
+  padding: 3px;
+  background: white;
+  z-index: 255;
+}
+
+.gwt-Button-NoBG {
+  margin: 0;
+  padding: 3px 5px;
+  text-decoration: none;
+  font-size: small;
+  cursor: pointer;
+  cursor: hand;
+  border: 1px outset #ccc;
+}
+
+.gwt-TabButton {
+  background-color:transparent;
+  margin: 0;
+  padding: 0px 0px;
+  text-decoration: none;
+  font-size: 12px;
+  font-family: arial;
+  font-weight: bold;
+  cursor: pointer;
+  cursor: hand;
+  border: 0px outset #ccc;
+}
+
+.gwt-TabText {
+  padding: 1px 1px;
+  font-size: 35px;
+  font-size: 9px;
+  font-family: arial;
+  font-weight: bold;
+}

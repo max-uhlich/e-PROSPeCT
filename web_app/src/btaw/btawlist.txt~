@@ -1,0 +1,297 @@
+.
+├── btaw_gui.gwt.xml
+├── btawlist.txt
+├── client
+│   ├── BTAW_GUI.java
+│   ├── classes
+│   │   └── ErrorPopupPanel.java
+│   ├── event
+│   │   ├── AddColumnEvent.java
+│   │   ├── AddFilterEvent.java
+│   │   ├── AddFilterHandler.java
+│   │   ├── AggregateDeleteEvent.java
+│   │   ├── build.xml
+│   │   ├── ClearEvent.java
+│   │   ├── controllers
+│   │   │   ├── AggregateDeleteController.java
+│   │   │   ├── FilterDeleteController.java
+│   │   │   ├── GroupByDeleteController.java
+│   │   │   ├── HeaderMenuSelectionController.java
+│   │   │   └── PreviewDropEventController.java
+│   │   ├── FilterDeleteEvent.java
+│   │   ├── GroupByDeleteEvent.java
+│   │   ├── handlers
+│   │   │   ├── AddColumnHandler.java
+│   │   │   ├── AggregateDeleteHandler.java
+│   │   │   ├── ClearEventHandler.java
+│   │   │   ├── DropEventHandler.java
+│   │   │   ├── FilterDeleteHandler.java
+│   │   │   ├── GroupByDeleteHandler.java
+│   │   │   ├── HasAddColumnHandlers.java
+│   │   │   ├── HasAggregateDeleteHandlers.java
+│   │   │   ├── HasDropHandlers.java
+│   │   │   ├── HasFilterDeleteHandlers.java
+│   │   │   ├── HasGroupByDeleteHandlers.java
+│   │   │   ├── HasHeaderMenuSelectionHandler.java
+│   │   │   ├── HasQueryChangeHandler.java
+│   │   │   ├── HeaderMenuSelectionHandler.java
+│   │   │   ├── LoginEventHandler.java
+│   │   │   └── QueryChangeHandler.java
+│   │   ├── HasAddFilterHandlers.java
+│   │   ├── HasPersonSelectHandlers.java
+│   │   ├── HasUpDownHandlers.java
+│   │   ├── HeaderMenuSelectionEvent.java
+│   │   ├── LoginEvent.java
+│   │   ├── PersonSelectEvent.java
+│   │   ├── PersonSelectHandler.java
+│   │   ├── PreviewDropEvent.java
+│   │   ├── QueryChangedEvent.java
+│   │   ├── UpDownEvent.java
+│   │   └── UpDownHandler.java
+│   ├── framework
+│   │   ├── AppController.java
+│   │   ├── AView.java
+│   │   ├── EventBus.java
+│   │   ├── IView.java
+│   │   ├── Page.java
+│   │   ├── Presenter.java
+│   │   └── PresenterCallback.java
+│   ├── modules
+│   │   ├── category
+│   │   │   ├── CategoryPresenter.java
+│   │   │   └── CategoryView.java
+│   │   ├── filter
+│   │   │   ├── FilterPresenter.java
+│   │   │   ├── FilterView.java
+│   │   │   └── panel
+│   │   ├── filterheader
+│   │   │   ├── FilterHeaderPresenter.java
+│   │   │   └── FilterHeaderView.java
+│   │   ├── function
+│   │   │   ├── FunctionPresenter.java
+│   │   │   └── FunctionView.java
+│   │   ├── image
+│   │   │   ├── BTAWCanvas.java
+│   │   │   ├── BTAWCanvasSafe.java
+│   │   │   ├── Circle.java
+│   │   │   ├── distance
+│   │   │   │   ├── DistanceCanvas.java
+│   │   │   │   ├── DistancePresenter.java
+│   │   │   │   └── DistanceView.java
+│   │   │   ├── ImagePresenter.java
+│   │   │   ├── ImageValuePanel.java
+│   │   │   ├── jaccard
+│   │   │   │   ├── DrawingCanvas.java
+│   │   │   │   ├── DrawingCanvasSafe.java
+│   │   │   │   ├── JaccardPatientPresenter.java
+│   │   │   │   ├── JaccardPatientView.java
+│   │   │   │   ├── JaccardPresenter.java
+│   │   │   │   └── JaccardView.java
+│   │   │   ├── Marker.java
+│   │   │   ├── overlap
+│   │   │   │   ├── OverlapPresenter.java
+│   │   │   │   └── OverlapView.java
+│   │   │   ├── RatioPresenter.java
+│   │   │   ├── RatioView.java
+│   │   │   ├── SimilarityDrawPresenter.java
+│   │   │   ├── SimilarityDrawView.java
+│   │   │   ├── SimilarityPresenter.java
+│   │   │   ├── SimilarityStudyPresenter.java
+│   │   │   ├── SimilarityStudyView.java
+│   │   │   └── SimilarityView.java
+│   │   ├── javascript
+│   │   │   └── JavascriptInjector.java
+│   │   ├── kaplanmeier
+│   │   │   ├── KaplanMeierGroupSelectorPresenter.java
+│   │   │   ├── KaplanMeierGroupSelectorView.java
+│   │   │   ├── KaplanMeierNamePresenter.java
+│   │   │   ├── KaplanMeierNameView.java
+│   │   │   ├── KaplanMeierPresenter.java
+│   │   │   ├── KaplanMeierStatisticPresenter.java
+│   │   │   ├── KaplanMeierStatisticView.java
+│   │   │   └── KaplanMeierView.java
+│   │   ├── login
+│   │   │   ├── LoginPresenter.java
+│   │   │   └── LoginView.java
+│   │   ├── main
+│   │   │   ├── MainPresenter.java
+│   │   │   └── MainView.java
+│   │   ├── movie
+│   │   │   ├── GlobalCommentEditPresenter.java
+│   │   │   ├── GlobalCommentEditView.java
+│   │   │   ├── GWTCanvasBasedCanvasFactory.java
+│   │   │   ├── GWTCanvasBasedCanvasLite.java
+│   │   │   ├── MovieLightPresenter.java
+│   │   │   ├── MovieLightView.java
+│   │   │   ├── MoviePresenter.java
+│   │   │   ├── MovieView.java
+│   │   │   ├── OptionsPresenter.java
+│   │   │   ├── OptionsView.java
+│   │   │   ├── OtherCommentEditPresenter.java
+│   │   │   └── OtherCommentEditView.java
+│   │   ├── person
+│   │   │   ├── PersonPresenter.java
+│   │   │   ├── PersonView.java
+│   │   │   ├── SegOptionsPresenter.java
+│   │   │   └── SegOptionsView.java
+│   │   ├── popups
+│   │   │   ├── OverwritePresenter.java
+│   │   │   └── OverwriteView.java
+│   │   ├── savequery
+│   │   │   ├── DeleteQueryPresenter.java
+│   │   │   ├── DeleteQueryView.java
+│   │   │   ├── SaveQueryPresenter.java
+│   │   │   └── SaveQueryView.java
+│   │   ├── synonym
+│   │   │   ├── SynonymPresenter.java
+│   │   │   └── SynonymView.java
+│   │   ├── synth
+│   │   │   ├── SynthPresenter.java
+│   │   │   ├── SynthValuePanel.java
+│   │   │   └── SynthView.java
+│   │   └── table
+│   │       ├── ButtonComparator.java
+│   │       ├── ExportDataPresenter.java
+│   │       ├── ExportDataView.java
+│   │       ├── FloatComparator.java
+│   │       ├── IntegerComparator.java
+│   │       ├── StringComparator.java
+│   │       ├── TablePresenter.java
+│   │       └── TableView.java
+│   ├── presenter
+│   ├── rpc
+│   │   ├── ModelService.java
+│   │   └── ModelServiceAsync.java
+│   └── view
+│       ├── filter
+│       │   ├── AggregatePanel.java
+│       │   ├── BooleanFilterPanel.java
+│       │   ├── DateFilterPanel.java
+│       │   ├── FilterPanel.java
+│       │   ├── FloatFilterPanel.java
+│       │   ├── GroupByPanel.java
+│       │   ├── ImageFilterPanel.java
+│       │   ├── IntegerFilterPanel.java
+│       │   ├── OperatorPanel.java
+│       │   ├── StringFilterPanel.java
+│       │   ├── SubgroupFilterPanel.java
+│       │   ├── SynthFilterPanel.java
+│       │   └── TableFilterPanel.java
+│       ├── panels
+│       │   ├── DefinitionPanel.java
+│       │   └── FunctionPanel.java
+│       └── widgets
+│           ├── ClickableHeader.java
+│           ├── ClickableHeaderNoContextMenu.java
+│           ├── ColumnLabel.java
+│           ├── ContextMenu.java
+│           ├── MagicTextColumn.java
+│           ├── SavedFeatureLabel.java
+│           ├── SavedQueryLabel.java
+│           ├── SliderBar.java
+│           ├── SliderBarMovie.java
+│           ├── TooltipListener.java
+│           └── WindowSensitiveMenuBar.java
+├── server
+│   ├── auth
+│   │   ├── Authenticator.java
+│   │   ├── BCrypt.java
+│   │   └── BTAWSessionListener.java
+│   ├── ImageServlet.java
+│   ├── model
+│   │   └── db
+│   │       ├── ConnectionPool.java
+│   │       └── Database.java
+│   ├── ModelServiceImpl.java
+│   ├── synth
+│   │   ├── ParseException.java
+│   │   ├── Parser.java
+│   │   ├── parser.jj
+│   │   ├── ParserConstants.java
+│   │   ├── ParserTokenManager.java
+│   │   ├── SimpleCharStream.java
+│   │   ├── Token.java
+│   │   └── TokenMgrError.java
+│   └── util
+│       ├── GrayFilter.java
+│       └── Public.java
+└── shared
+    ├── model
+    │   ├── BTAWDatabaseException.java
+    │   ├── Category.java
+    │   ├── DefinitionData.java
+    │   ├── FunctionData.java
+    │   ├── ImageType.java
+    │   ├── KMData.java
+    │   ├── query
+    │   │   ├── column
+    │   │   │   ├── BooleanTableColumn.java
+    │   │   │   ├── Column.java
+    │   │   │   ├── DateTableColumn.java
+    │   │   │   ├── FloatTableColumn.java
+    │   │   │   ├── FunctionTableColumn.java
+    │   │   │   ├── ImageColumn.java
+    │   │   │   ├── IntegerTableColumn.java
+    │   │   │   ├── StringTableColumn.java
+    │   │   │   ├── SynthTableColumn.java
+    │   │   │   └── TableColumn.java
+    │   │   ├── filter
+    │   │   │   ├── AggregateFunction.java
+    │   │   │   ├── BooleanTableColumnFilter.java
+    │   │   │   ├── CenterMassImageFilter.java
+    │   │   │   ├── DateTableColumnFilter.java
+    │   │   │   ├── Filter.java
+    │   │   │   ├── FilterPart.java
+    │   │   │   ├── FilterStateException.java
+    │   │   │   ├── FloatTableColumnFilter.java
+    │   │   │   ├── ImageFilter.java
+    │   │   │   ├── ImageQueryFilter.java
+    │   │   │   ├── IntegerTableColumnFilter.java
+    │   │   │   ├── JaccardImageFilter.java
+    │   │   │   ├── JaccardPatientFilter.java
+    │   │   │   ├── NestedFilter.java
+    │   │   │   ├── NoFilter.java
+    │   │   │   ├── OverlapImageFilter.java
+    │   │   │   ├── RegionContrastFilter.java
+    │   │   │   ├── ScoredImageFilter.java
+    │   │   │   ├── StringTableColumnFilter.java
+    │   │   │   └── TableColumnFilter.java
+    │   │   ├── Query.java
+    │   │   ├── saved
+    │   │   │   ├── GWTPWorkaround.java
+    │   │   │   ├── Point.java
+    │   │   │   ├── RebuildDataAggregatePanel.java
+    │   │   │   ├── RebuildDataBooleanFilterPanel.java
+    │   │   │   ├── RebuildDataDateFilterPanel.java
+    │   │   │   ├── RebuildDataFilterPanel.java
+    │   │   │   ├── RebuildDataFloatFilterPanel.java
+    │   │   │   ├── RebuildDataGroupByPanel.java
+    │   │   │   ├── RebuildDataImageFilterPanel.java
+    │   │   │   ├── RebuildDataIntegerFilterPanel.java
+    │   │   │   ├── RebuildDataOperatorPanel.java
+    │   │   │   ├── RebuildDataStringFilterPanel.java
+    │   │   │   ├── RebuildDataSynthFilterPanel.java
+    │   │   │   ├── SavedQuery.java
+    │   │   │   └── SavedQueryDisplayData.java
+    │   │   ├── SQLProducer.java
+    │   │   ├── Table.java
+    │   │   └── value
+    │   │       ├── BooleanValue.java
+    │   │       ├── DateValue.java
+    │   │       ├── FloatValue.java
+    │   │       ├── IntegerValue.java
+    │   │       ├── LiteralBooleanValue.java
+    │   │       ├── LiteralDateValue.java
+    │   │       ├── LiteralFloatValue.java
+    │   │       ├── LiteralIntegerValue.java
+    │   │       ├── LiteralStringValue.java
+    │   │       ├── StringValue.java
+    │   │       └── Value.java
+    │   ├── Study.java
+    │   ├── SynonymData.java
+    │   └── TableRow.java
+    └── util
+        ├── F_UtilE.java
+        └── SynthColumnException.java
+
+47 directories, 247 files

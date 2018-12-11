@@ -1,0 +1,249 @@
+<!doctype html>
+<!-- The DOCTYPE declaration above will set the    -->
+<!-- browser's rendering engine into               -->
+<!-- "Standards Mode". Replacing this declaration  -->
+<!-- with a "Quirks Mode" doctype may lead to some -->
+<!-- differences in layout.                        -->
+
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="BTAW_GUI.css">
+    <title>PROSPeCT</title>
+    <script type="text/javascript" language="javascript" src="btaw_gui/btaw_gui.nocache.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.js"></script>
+    <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.5.0/d3.js"></script> -->
+  <style type='text/css'>
+
+.chart {
+  margin-left: 42px;
+  font: 10px sans-serif;
+  shape-rendering: crispEdges;
+}
+
+.chart div {
+  background-color: steelblue;
+  text-align: right;
+  padding: 3px;
+  margin: 1px;
+  color: white;
+}
+
+.chart rect {
+  stroke: white;
+  fill: steelblue;
+}
+
+.chart text.bar {
+  fill: white;
+}
+
+.psaChart {
+  font: 10px sans-serif;
+}
+
+.patientSummary {
+  font: 13px sans-serif;
+  fill: black;
+}
+
+.cens {
+  cursor: pointer;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+
+.yaxis path,
+.yaxis line {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+.xaxis path,
+.xaxis line {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+.yaxis text {
+    font-family: sans-serif;
+    font-size: 10px;
+}
+
+.raxis path,
+.raxis line {
+    fill: none;
+    shape-rendering: crispEdges;
+}
+
+.raxis text {
+    font-family: sans-serif;
+    font-size: 10px;
+}
+
+
+.xaxis text {
+    font-family: sans-serif;
+    font-size: 10px;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1px;
+}
+
+/** EVENT LINES **/
+.as_001, .tp_001, .r_004, .r_005 {
+  fill: none;
+  stroke: rgba(255, 0, 0, 0.3);
+  stroke-width: 1px;
+}
+.pr_004, .pr_016, .pr_021, .pr_026, .pr_032 {
+  fill: none;
+  stroke: rgba(170, 0, 255, 0.3);
+  stroke-width: 1px;
+}
+.ac_007, .ac_001 {
+  fill: none;
+  stroke: rgba(170, 0, 255, 0.3);
+  stroke-width: 1px;
+}
+.cy_001, .su_014, .su_002, .su_011 {
+  fill: none;
+  stroke: rgba(0, 143, 145, 0.3);
+  stroke-width: 1px;
+}
+.cr_009 {
+  fill: none;
+  stroke: rgba(0, 100, 25, 0.3);
+  stroke-width: 1px;
+}
+
+
+
+.agg_line {
+  fill: none;
+  stroke: gray;
+  stroke-width: 1px;
+}
+
+.sel_line {
+  fill: none;
+  stroke: rgba(255, 0, 0, 1);
+  stroke-width: 1px;
+}
+
+.implantOrigin {
+  fill: none;
+  stroke: black;
+  stroke-width: 1px;
+}
+
+.dot {
+  fill: steelblue;
+  cursor: pointer;
+}
+
+.tooltip {
+		position: absolute;
+        width: 100px;
+        height: auto;
+        padding: 5px;
+        background-color: rgba(0, 0, 0, 0.8);
+        pointer-events: none;
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        border-radius: 2px;
+        font: 10px sans-serif;
+        text-align: center;
+}
+
+.dt_tooltip {
+		position: absolute;
+        width: 150px;
+        height: auto;
+        padding: 5px;
+        background-color: rgba(0, 0, 0, 0.8);
+        pointer-events: none;
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        border-radius: 2px;
+        font: 10px sans-serif;
+        text-align: center;
+}
+
+.tiptext {
+	color: steelblue;
+}
+
+.pidColumnStyle {
+  cursor: pointer;
+}
+/*
+.flexTable {
+   border: 0px solid black;
+}
+
+.flexTable td {
+   border: 0px solid black;
+}
+*/
+
+.centralField {
+ 	text-align: center;
+}
+
+.rightField {
+	text-align: right;
+}
+
+.leftField {
+	text-align: left;
+}
+
+.topAlign {
+	vertical-align: top;
+}
+
+.headerValue {
+   font: 12px sans-serif;
+   background-color: rgba(0, 0, 0, 0.1);
+}
+
+.fieldValue {
+   font: 12px sans-serif;
+}
+
+.summaryValue {
+   border: 1px solid #BBBBBB;
+   font: 10px sans-serif;
+   text-align: center;
+}
+
+.hot {
+ 	background-color: rgba(255, 0, 0, 0.2);
+}
+
+</style>
+  <script type="text/javascript" language="javascript" src="d3_vis.js"></script>
+  </head>
+
+  <body>
+    <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>
+    <noscript>
+      <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
+        Your web browser must have JavaScript enabled
+        in order for this application to display correctly.
+      </div>
+    </noscript>
+  </body>
+</html>
